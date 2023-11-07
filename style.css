@@ -1,0 +1,27 @@
+/* styles.css */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: inline-block;
+    margin: 10px;
+}
+
+img {
+    width: 100px; /* Ajuste la taille des images selon tes besoins */
+}
+
+.popup {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+li:hover .popup {
+    display: block;
+}
