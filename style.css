@@ -23,7 +23,7 @@ img {
 .popup {
     display: none;
     position: absolute;
-    background: #fff;
+    background: #333;
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
