@@ -1,4 +1,10 @@
 /* styles.css */
+
+body {
+    background-color: #333; /* Gris foncé */
+    color: white; /* Texte blanc */
+}
+
 ul {
     list-style: none;
     padding: 0;
