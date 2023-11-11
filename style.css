@@ -39,6 +39,10 @@ img {
     font-family: 'Franklin Gothic Medium', 'Arial', sans-serif;
 }
 
+.popup h3 {
+    margin-bottom: 5px; /* Ajuste la valeur selon tes besoins */
+}
+
 li:hover .popup {
     display: block;
 }
