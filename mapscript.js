@@ -29,8 +29,13 @@ map.addEventListener("mousemove", function (event) {
 
 // Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
-    // Implémente la logique pour vérifier si la souris est sur le Pokémon
-    // Retourne true si c'est le cas, sinon false
+    var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
+    return (
+        mouseX >= pokemonCoords[0] - tolerance &&
+        mouseX <= pokemonCoords[0] + tolerance &&
+        mouseY >= pokemonCoords[1] - tolerance &&
+        mouseY <= pokemonCoords[1] + tolerance
+    );
 }
 
 // Fonction pour afficher le popup du Pokémon
@@ -58,10 +63,11 @@ function hidePokemonPopups() {
 }
 
 // Fonction pour créer l'élément du popup du Pokémon
-function createPokemonPopupElement(pokemonName) {
+function createPokemonPopupElement(pokemon) {
     var pokemonPopup = document.createElement("div");
-    pokemonPopup.id = "popup-" + pokemonName;
+    pokemonPopup.id = "popup-" + pokemon.name;
     pokemonPopup.className = "pokemon-popup";
-    pokemonPopup.innerText = pokemonName;
+    pokemonPopup.innerHTML = `<strong>${pokemon.name}</strong><br>${pokemon.description}`;
     return pokemonPopup;
 }
+
