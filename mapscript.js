@@ -43,6 +43,21 @@ function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
     );
 }
 
+function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
+
+    var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
+    var isOver = (
+        mouseX >= pokemonCoords[0] - tolerance &&
+        mouseX <= pokemonCoords[0] + tolerance &&
+        mouseY >= pokemonCoords[1] - tolerance &&
+        mouseY <= pokemonCoords[1] + tolerance
+    );
+
+    console.log("Is over Pokemon:", isOver);
+
+    return isOver;
+}
+
 // Fonction pour créer l'élément du popup du Pokémon
 function createPokemonPopupElement(pokemon) {
     var pokemonPopup = document.createElement("div");
@@ -76,3 +91,9 @@ function hidePokemonPopups() {
     }
 }
 
+var map = document.getElementById("map");
+var pokemonContainer = document.getElementById("pokemonContainer");
+
+console.log("Map element:", map);
+console.log("Pokemon container element:", pokemonContainer);
+console.log("Pokemon coordinates:", pokemonCoords);
