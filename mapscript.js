@@ -4,8 +4,8 @@ var pokemonContainer = document.getElementById("pokemonContainer");
 
 // Définit la structure de données des Pokémon
 var pokemonData = [
-    { name: "Excelsior", coords: [450, 80], description: "Un Pokémon fantastique." },
-    { name: "Chrome", coords: [640, 230], description: "Une sentinelle chromatique." },
+    { name: "Excelsior", coords: [1350, 460], description: "Un Métalosse fantastique, membre de l'équipe de pokémon blanc 2." },
+    { name: "Chrome", coords: [640, 230], description: "Un Magnézone chromatique de pokémon platine." },
     // Ajoute d'autres Pokémon avec leurs coordonnées
 ];
 
