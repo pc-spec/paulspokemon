@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", function() {
+    
 var pokemonData = [
     { name: "Excelsior", coords: [1350, 460], description: "Un Pokémon fantastique." },
     { name: "Chrome", coords: [640, 230], description: "Une sentinelle chromatique." },
@@ -66,4 +68,7 @@ function hidePokemonPopups() {
         popup.style.display = "none";
     });
 }
+
+}
+);
 
