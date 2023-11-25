@@ -1,5 +1,6 @@
 var pokemonData = [
-    { name: "Excelsior", coords: [1345, 460], description: "Un Pokémon fantastique." },
+    { name: "Excelsior", coords: [450, 80], description: "Un Pokémon fantastique." },
+    { name: "Chrome", coords: [640, 230], description: "Une sentinelle chromatique." },
     // Ajoute d'autres Pokémon avec leurs coordonnées
 ];
 
