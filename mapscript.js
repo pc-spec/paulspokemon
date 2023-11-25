@@ -32,13 +32,13 @@ map.addEventListener("mousemove", function (event) {
 );
                      
 // Fonction pour vérifier si la souris est sur un Pokémon
-function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
+function isMouseOverPokemon(mouseX, mouseY, pokemon.coords) {
     var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
     return (
-        mouseX >= pokemonCoords[0] - tolerance &&
-        mouseX <= pokemonCoords[0] + tolerance &&
-        mouseY >= pokemonCoords[1] - tolerance &&
-        mouseY <= pokemonCoords[1] + tolerance
+        mouseX >= pokemon.coords[0] - tolerance &&
+        mouseX <= pokemon.coords[0] + tolerance &&
+        mouseY >= pokemon.coords[1] - tolerance &&
+        mouseY <= pokemon.coords[1] + tolerance
     );
 }
 
