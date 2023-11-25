@@ -31,6 +31,10 @@ map.addEventListener("mousemove", function (event) {
     // Itère sur la structure de données pour vérifier si la souris est sur un Pokémon
     for (var i = 0; i < pokemonData.length; i++) {
         var pokemon = pokemonData[i];
+        
+        // Ajoute ce log pour voir les coordonnées de chaque Pokémon
+        console.log("Pokemon coordinates:", pokemon.coords);
+
 
         // Utilise les coordonnées relatives à la carte du Pokémon
         var pokemonX = pokemon.coords[0];
@@ -57,6 +61,49 @@ function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
         mouseY <= pokemonCoords[1] + tolerance
     );
 }
+// Fonction pour vérifier si la souris est sur un Pokémon
+function isMouseOverPokemon(mouseX, mouseY) {
+    var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
+
+    for (var i = 0; i < pokemonData.length; i++) {
+        var pokemon = pokemonData[i];
+        var pokemonX = pokemon.coords[0];
+        var pokemonY = pokemon.coords[1];
+
+        if (
+            mouseX >= pokemonX - tolerance &&
+            mouseX <= pokemonX + tolerance &&
+            mouseY >= pokemonY - tolerance &&
+            mouseY <= pokemonY + tolerance
+        ) {
+            // Retourne le Pokémon spécifique si la souris est au-dessus de celui-ci
+            return pokemon;
+        }
+    }
+
+    // Aucun Pokémon n'est survolé
+    return false;
+}
+
+// Ajoute un gestionnaire d'événements au survol de la carte
+map.addEventListener("mousemove", function (event) {
+    // Récupère les coordonnées de la souris
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+
+    // Utilise la fonction isMouseOverPokemon pour vérifier si la souris est sur un Pokémon
+    var hoveredPokemon = isMouseOverPokemon(mouseX, mouseY);
+
+    if (hoveredPokemon) {
+        // Si un Pokémon est survolé, affiche le popup du Pokémon
+        console.log("Mouse over Pokemon:", hoveredPokemon.name);
+        showPokemonPopup(hoveredPokemon.name, mouseX, mouseY);
+    } else {
+        // Si aucun Pokémon n'est survolé, masque tous les popups
+        hidePokemonPopups();
+    }
+}
+);
 
 // Fonction pour afficher le popup du Pokémon
 function showPokemonPopup(pokemonName, mouseX, mouseY) {
