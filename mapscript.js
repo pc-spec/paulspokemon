@@ -25,7 +25,6 @@ map.addEventListener("mousemove", function (event) {
 
     // Masque tous les popups s'il n'y a pas de survol
     hidePokemonPopups();
-);
 }
                      
 // Gestionnaire d'événements pour le mouvement de la souris sur la carte
@@ -44,7 +43,7 @@ map.addEventListener("mousemove", function (event) {
 
     // Masque tous les popups s'il n'y a pas de survol
     hidePokemonPopups();
-});
+}
 
 
 // Fonction pour vérifier si la souris est sur un Pokémon
