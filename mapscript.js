@@ -51,24 +51,17 @@ map.addEventListener("mousemove", function (event) {
 }
 );
 
-// Fonction pour vérifier si la souris est sur un Pokémon
-function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
-    var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
-    return (
-        mouseX >= pokemonCoords[0] - tolerance &&
-        mouseX <= pokemonCoords[0] + tolerance &&
-        mouseY >= pokemonCoords[1] - tolerance &&
-        mouseY <= pokemonCoords[1] + tolerance
-    );
-}
-// Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY) {
     var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
 
+    var mapRect = map.getBoundingClientRect();
+    var scrollX = window.scrollX || window.pageXOffset;
+    var scrollY = window.scrollY || window.pageYOffset;
+
     for (var i = 0; i < pokemonData.length; i++) {
         var pokemon = pokemonData[i];
-        var pokemonX = pokemon.coords[0];
-        var pokemonY = pokemon.coords[1];
+        var pokemonX = pokemon.coords[0] - mapRect.left + scrollX;
+        var pokemonY = pokemon.coords[1] - mapRect.top + scrollY;
 
         if (
             mouseX >= pokemonX - tolerance &&
