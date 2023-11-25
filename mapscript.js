@@ -25,7 +25,27 @@ map.addEventListener("mousemove", function (event) {
 
     // Masque tous les popups s'il n'y a pas de survol
     hidePokemonPopups();
+);
+}
+                     
+// Gestionnaire d'événements pour le mouvement de la souris sur la carte
+map.addEventListener("mousemove", function (event) {
+    console.log("Mouse moved over the map!"); // Ajoute cette ligne
+
+    // Itère sur la structure de données pour vérifier si la souris est sur un Pokémon
+    for (var i = 0; i < pokemonData.length; i++) {
+        var pokemon = pokemonData[i];
+
+        if (isMouseOverPokemon(event.clientX, event.clientY, pokemon.coords)) {
+            // Affiche le popup du Pokémon à la position de la souris
+            showPokemonPopup(pokemon.name, event.clientX, event.clientY);
+        }
+    }
+
+    // Masque tous les popups s'il n'y a pas de survol
+    hidePokemonPopups();
 });
+
 
 // Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
