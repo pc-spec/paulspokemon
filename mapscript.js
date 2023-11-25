@@ -44,7 +44,9 @@ function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
 }
 
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
-
+    console.log("Checking if mouse is over Pokemon...");
+    console.log("Mouse coordinates:", mouseX, mouseY);
+    console.log("Pokemon coordinates:", pokemonCoords);
     var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
     var isOver = (
         mouseX >= pokemonCoords[0] - tolerance &&
@@ -96,4 +98,14 @@ var pokemonContainer = document.getElementById("pokemonContainer");
 
 console.log("Map element:", map);
 console.log("Pokemon container element:", pokemonContainer);
-console.log("Pokemon coordinates:", pokemonCoords);
+
+for (var i = 0; i < pokemonData.length; i++) {
+    var pokemon = pokemonData[i];
+
+    console.log("Checking Pokemon:", pokemon.name);
+
+    if (isMouseOverPokemon(mouseX, mouseY, pokemon.coords)) {
+        console.log("Mouse over Pokemon:", pokemon.name);
+        showPokemonPopup(pokemon.name, mouseX, mouseY);
+    }
+}
