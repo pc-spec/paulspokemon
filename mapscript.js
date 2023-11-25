@@ -27,8 +27,9 @@ map.addEventListener("mousemove", function (event) {
 
     // Masque tous les popups s'il n'y a pas de survol
     hidePokemonPopups();
-});
-
+ }
+);
+                     
 // Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
     var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
