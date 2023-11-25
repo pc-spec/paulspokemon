@@ -10,12 +10,12 @@ var pokemonContainer = document.getElementById("pokemonContainer");
 // Ajoute un gestionnaire d'événements au survol de la carte
 map.addEventListener("mousemove", function (event) {
     console.log("Mouse moved over the map!");
-// Récupère les coordonnées de la souris
+    // Récupère les coordonnées de la souris
     var mouseX = event.clientX;
     var mouseY = event.clientY;
 
     console.log("Mouse coordinates:", mouseX, mouseY);
-// Itère sur la structure de données pour vérifier si la souris est sur un Pokémon
+    // Itère sur la structure de données pour vérifier si la souris est sur un Pokémon
     for (var i = 0; i < pokemonData.length; i++) {
         var pokemon = pokemonData[i];
 
@@ -27,12 +27,7 @@ map.addEventListener("mousemove", function (event) {
 
     // Masque tous les popups s'il n'y a pas de survol
     hidePokemonPopups();
-}
-                     
-// Gestionnaire d'événements pour le mouvement de la souris sur la carte
-map.addEventListener("mousemove", function (event) {
-    console.log("Mouse moved over the map!"); // Ajoute cette ligne
-}
+});
 
 // Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
@@ -77,4 +72,3 @@ function createPokemonPopupElement(pokemon) {
     pokemonPopup.innerHTML = `<strong>${pokemon.name}</strong><br>${pokemon.description}`;
     return pokemonPopup;
 }
-
