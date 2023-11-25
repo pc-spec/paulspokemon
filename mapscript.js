@@ -28,9 +28,7 @@ map.addEventListener("mousemove", function (event) {
     }
 
     hidePokemonPopups();
-    } catch (error) {
-        console.error("Erreur dans la gestion de l'événement de survol :", error);
-    }
+    
 }
 );
 
