@@ -28,7 +28,11 @@ map.addEventListener("mousemove", function (event) {
     }
 
     hidePokemonPopups();
-});
+    } catch (error) {
+        console.error("Erreur dans la gestion de l'événement de survol :", error);
+    }
+}
+);
 
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
     var tolerance = 20;
@@ -49,7 +53,7 @@ function createPokemonPopupElement(pokemon) {
 }
 
 function showPokemonPopup(pokemonName, mouseX, mouseY) {
-    var pokemonPopup = document.getElementById("popup-" + pokemonName) || createPokemonPopupElement(pokemon);
+    var pokemonPopup = document.getElementById("popup-" + pokemonName) || createPokemonPopupElement({ name: pokemonName });
     
     pokemonPopup.style.display = "block";
     pokemonPopup.style.left = mouseX + "px";
