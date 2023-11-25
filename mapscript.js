@@ -33,6 +33,7 @@ map.addEventListener("mousemove", function (event) {
                      
 // Fonction pour vérifier si la souris est sur un Pokémon
 function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
+    console.log("Checking if mouse is over Pokemon...");
     var tolerance = 20; // Ajuste cela en fonction de la sensibilité souhaitée
     return (
         mouseX >= pokemonCoords[0] - tolerance &&
@@ -42,10 +43,19 @@ function isMouseOverPokemon(mouseX, mouseY, pokemonCoords) {
     );
 }
 
+// Fonction pour créer l'élément du popup du Pokémon
+function createPokemonPopupElement(pokemon) {
+    var pokemonPopup = document.createElement("div");
+    pokemonPopup.id = "popup-" + pokemon.name;
+    pokemonPopup.className = "pokemon-popup";
+    pokemonPopup.innerHTML = `<strong>${pokemon.name}</strong><br>${pokemon.description}`;
+    return pokemonPopup;
+}
+
 // Fonction pour afficher le popup du Pokémon
 function showPokemonPopup(pokemonName, mouseX, mouseY) {
     // Crée ou récupère l'élément du popup du Pokémon
-    var pokemonPopup = document.getElementById("popup-" + pokemonName);
+    var pokemonPopup = document.getElementById("popup-" + pokemon.name);
     if (!pokemonPopup) {
         pokemonPopup = createPokemonPopupElement(pokemonName);
         pokemonContainer.appendChild(pokemonPopup);
@@ -66,11 +76,3 @@ function hidePokemonPopups() {
     }
 }
 
-// Fonction pour créer l'élément du popup du Pokémon
-function createPokemonPopupElement(pokemon) {
-    var pokemonPopup = document.createElement("div");
-    pokemonPopup.id = "popup-" + pokemon.name;
-    pokemonPopup.className = "pokemon-popup";
-    pokemonPopup.innerHTML = `<strong>${pokemon.name}</strong><br>${pokemon.description}`;
-    return pokemonPopup;
-}
