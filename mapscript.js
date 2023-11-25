@@ -98,11 +98,12 @@ map.addEventListener("mousemove", function (event) {
 }
 );
 
-// Fonction pour afficher le popup du Pokémon
 function showPokemonPopup(pokemonName, mouseX, mouseY) {
-    // Crée ou récupère l'élément du popup du Pokémon
     var pokemonPopup = document.getElementById("popup-" + pokemonName);
+
+    // Vérifie si le popup existe déjà
     if (!pokemonPopup) {
+        // Crée l'élément du popup du Pokémon s'il n'existe pas
         pokemonPopup = createPokemonPopupElement(pokemonName);
         pokemonContainer.appendChild(pokemonPopup);
     }
@@ -111,15 +112,6 @@ function showPokemonPopup(pokemonName, mouseX, mouseY) {
     pokemonPopup.style.display = "block";
     pokemonPopup.style.left = mouseX + "px";
     pokemonPopup.style.top = mouseY + "px";
-}
-
-// Fonction pour masquer tous les popups
-function hidePokemonPopups() {
-    // Itère sur tous les popups et les masque
-    var popups = document.querySelectorAll(".pokemon-popup");
-    for (var i = 0; i < popups.length; i++) {
-        popups[i].style.display = "none";
-    }
 }
 
 // Fonction pour créer l'élément du popup du Pokémon
