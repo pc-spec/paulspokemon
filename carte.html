@@ -1,28 +1,344 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte</title>
-    <link rel="icon" href="images/pokeball.png" type="image/png">
-    <link rel="shortcut icon" href="images/pokeball.png" type="image/png">
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte — Mes Pokémon à travers les âges</title>
+  <link rel="icon" href="images/pokeball.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap">
+  <style>
+    /* ── Variables (même palette que l'index) ── */
+    :root {
+      --bg:          #080810;
+      --surface:     #0f0f1e;
+      --surface2:    #16162a;
+      --surface3:    #1e1e36;
+      --border:      rgba(160,160,240,0.08);
+      --border-glow: rgba(160,160,240,0.2);
+      --text:        #e0e0f0;
+      --text-muted:  #6868a0;
+      --gold:        #c8a44a;
+      --radius:      10px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    .top-nav {
+      position: sticky; top:0; z-index:500;
+      background: rgba(8,8,16,0.92);
+      backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .top-nav ul {
+      display: flex; flex-wrap: wrap; list-style: none;
+      justify-content: center; max-width: 1380px; margin:0 auto;
+    }
+    .top-nav ul li { display:inline-block; }
+    .top-nav ul li a {
+      display: block; padding: 0.65rem 0.9rem;
+      color: var(--text-muted); text-decoration: none;
+      font-family: 'Cinzel', serif; font-size: 0.6rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .top-nav ul li a:hover { color: var(--gold); }
+    .top-nav ul li a.active { color: var(--gold); }
+
+    /* ── HEADER BAR ── */
+    .map-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.8rem;
+      padding: 1.1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .map-title {
+      font-family: 'Cinzel', serif; font-size: 1.1rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text);
+    }
+    .map-title span { color: var(--gold); }
+
+    .map-controls { display: flex; gap: 0.6rem; align-items: center; }
+
+    #placeBtn {
+      font-family: 'Cinzel', serif; font-size: 0.62rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      background: transparent;
+      border: 1px solid var(--border-glow);
+      border-radius: 6px; color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    #placeBtn:hover { border-color: var(--gold); color: var(--gold); }
+    #placeBtn.active { border-color: var(--gold); color: var(--gold); background: rgba(200,164,74,0.08); }
+
+    .stat-badge {
+      font-family: 'Cinzel', serif; font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.8rem;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-muted);
+    }
+    .stat-badge strong { color: var(--gold); }
+
+    /* ── MAP AREA ── */
+    .map-area {
+      flex: 1; display: flex; overflow: hidden;
+    }
+
+    /* Placement panel */
+    #placePanel {
+      display: none; flex-direction: column;
+      width: 260px; flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .place-header {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Cinzel', serif; font-size: 0.7rem;
+      letter-spacing: 0.08em; color: var(--gold);
+      text-transform: uppercase;
+    }
+    #coordOut {
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem; color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      min-height: 2.5rem;
+      background: var(--surface2);
+      font-style: italic;
+    }
+    #placeList {
+      flex: 1; overflow-y: auto;
+      padding: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(160,160,240,0.15) transparent;
+    }
+    .place-count {
+      font-family: 'Cinzel', serif; font-size: 0.65rem;
+      color: var(--text-muted); letter-spacing: 0.06em;
+      padding: 0.4rem 0.5rem 0.8rem;
+      text-align: center;
+    }
+    .place-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      width: 100%; padding: 0.45rem 0.6rem;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 6px; cursor: pointer;
+      text-align: left; transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+    .place-item img { width:32px; height:32px; object-fit:contain; image-rendering:pixelated; flex-shrink:0; }
+    .place-item span { color: var(--text); font-family:'Cinzel',serif; font-size:0.72rem; flex:1; }
+    .place-item small { color: var(--text-muted); font-size: 0.65rem; white-space:nowrap; }
+    .place-item:hover { background: var(--surface2); border-color: var(--border-glow); }
+    .place-item.active { border-color: var(--item-color, var(--gold)); background: color-mix(in srgb, var(--item-color, var(--gold)) 10%, var(--surface2)); }
+    .place-done { text-align:center; padding:2rem 1rem; color:var(--text-muted); font-style:italic; }
+
+    /* Map scroll container */
+    #mapWrap {
+      flex: 1; overflow: auto; position: relative;
+      cursor: grab;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(160,160,240,0.15) transparent;
+    }
+    #mapWrap:active { cursor: grabbing; }
+
+    #mapInner {
+      position: relative;
+      display: inline-block;
+      min-width: 100%;
+    }
+
     #map {
-        position: relative;
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
-    .pokemonPopup {
-    position: absolute;
-    display: none;
+    /* ── SPRITE OVERLAY ── */
+    #overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
     }
-    </style>
 
+    .map-sprite {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: all;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .map-sprite img {
+      display: block;
+      width: 36px; height: 36px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter:
+        drop-shadow(0 2px 6px rgba(0,0,0,0.8))
+        drop-shadow(0 0 8px var(--sprite-color, #c8a44a));
+      transition: filter 0.15s, transform 0.15s;
+    }
+
+    .map-sprite::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--sprite-color, var(--gold));
+      box-shadow: 0 0 8px var(--sprite-color, var(--gold));
+      opacity: 0.7;
+    }
+
+    .map-sprite:hover img {
+      transform: scale(1.25) translateY(-4px);
+      filter:
+        drop-shadow(0 4px 12px rgba(0,0,0,0.9))
+        drop-shadow(0 0 16px var(--sprite-color, #c8a44a));
+    }
+
+    /* ── TOOLTIP (same as index) ── */
+    #pkmn-tip {
+      position: fixed;
+      display: none;
+      width: 310px;
+      background: var(--surface2);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem 1.2rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04);
+      z-index: 9999;
+      pointer-events: none;
+      max-height: 70vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      animation: tipIn 0.13s ease forwards;
+    }
+    #pkmn-tip::before {
+      content: '';
+      position: absolute; top:0; left:0; right:0; height:3px;
+      background: var(--tip-color, var(--gold));
+      border-radius: 12px 12px 0 0;
+    }
+    @keyframes tipIn {
+      from { opacity:0; transform:translateY(6px) scale(0.97); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    .tip-header {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 0.6rem;
+    }
+    .tip-sprite {
+      width: 52px; height: 52px;
+      object-fit: contain; image-rendering: pixelated;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+      flex-shrink: 0;
+    }
+    #pkmn-tip h3 {
+      font-family: 'Cinzel', serif; font-size: 0.98rem;
+      font-weight: 600; color: var(--tip-color, var(--gold));
+      letter-spacing: 0.04em; margin-bottom: 0.15rem;
+    }
+    .tip-game {
+      font-size: 0.75rem; color: var(--text-muted);
+      font-style: italic; letter-spacing: 0.03em;
+    }
+    #pkmn-tip p {
+      font-size: 0.85rem; line-height: 1.72;
+      color: var(--text); white-space: pre-line;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(160,160,240,0.15); border-radius: 3px; }
+  </style>
 </head>
 <body>
-<img src="images/map_v6.png" alt="map_v6" border="0" id="map">
- <div id="pokemonContainer"></div>
 
-<script src="mapscript.js"></script>
+  <nav class="top-nav">
+    <ul>
+      <li><a href="index.html">← Accueil</a></li>
+      <li><a href="carte.html" class="active">🗺 Carte</a></li>
+    </ul>
+  </nav>
 
+  <div class="map-header">
+    <div class="map-title">Carte du <span>Continent</span></div>
+    <div class="map-controls">
+      <div class="stat-badge" id="statBadge">
+        <strong>—</strong> / 197 placés
+      </div>
+      <button id="placeBtn">⊕ Mode placement</button>
+    </div>
+  </div>
+
+  <div class="map-area">
+    <div id="placePanel">
+      <div class="place-header">Placer un Pokémon</div>
+      <div id="coordOut">Sélectionne un Pokémon dans la liste ci-dessous, puis clique sur la carte.</div>
+      <div id="placeList"></div>
+    </div>
+
+    <div id="mapWrap">
+      <div id="mapInner">
+        <img src="images/map_v6.png" alt="Carte du continent" id="map">
+        <div id="overlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="mapscript.js" defer></script>
+
+  <script>
+    // Update stat badge
+    const placed = POKEMON_DATA ? POKEMON_DATA.filter(p => p.x !== null).length : 0;
+    // This runs after mapscript so it's fine via the deferred script updating it
+    window.addEventListener('load', () => {
+      const p = POKEMON_DATA.filter(p => p.x !== null).length;
+      document.getElementById('statBadge').innerHTML = `<strong>${p}</strong> / ${POKEMON_DATA.length} placés`;
+    });
+
+    // Middle-click drag-to-scroll
+    const wrap = document.getElementById('mapWrap');
+    let dragging = false, startX, startY, scrollLeft, scrollTop;
+    wrap.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      dragging = true;
+      startX = e.pageX - wrap.offsetLeft;
+      startY = e.pageY - wrap.offsetTop;
+      scrollLeft = wrap.scrollLeft;
+      scrollTop  = wrap.scrollTop;
+    });
+    window.addEventListener('mouseup',   () => dragging = false);
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      e.preventDefault();
+      wrap.scrollLeft = scrollLeft - (e.pageX - wrap.offsetLeft - startX);
+      wrap.scrollTop  = scrollTop  - (e.pageY - wrap.offsetTop  - startY);
+    });
+  </script>
 </body>
 </html>
