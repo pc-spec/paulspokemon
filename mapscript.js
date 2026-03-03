@@ -128,6 +128,8 @@ placeBtn.addEventListener('click', () => {
   placeBtn.classList.toggle('active', placeMode);
   if (placeMode) refreshPlaceList();
   else { placeTarget = null; mapImg.style.cursor = ''; }
+  // La carte vient de changer de taille — recalculer les positions
+  requestAnimationFrame(renderSprites);
 });
 
 // Click on map in placement mode
