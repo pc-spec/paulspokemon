@@ -80,7 +80,10 @@ function renderSprites() {
 
 mapImg.addEventListener('load', renderSprites);
 if (mapImg.complete) renderSprites();
-window.addEventListener('resize', () => { renderSprites(); });
+
+// ResizeObserver : se déclenche dès que la carte change de taille réellement,
+// que ce soit via le volet, le redimensionnement de fenêtre, ou autre.
+new ResizeObserver(renderSprites).observe(mapImg);
 
 // ─── PLACEMENT MODE ───
 const placeBtn   = document.getElementById('placeBtn');
@@ -128,8 +131,6 @@ placeBtn.addEventListener('click', () => {
   placeBtn.classList.toggle('active', placeMode);
   if (placeMode) refreshPlaceList();
   else { placeTarget = null; mapImg.style.cursor = ''; }
-  // La carte vient de changer de taille — recalculer les positions
-  requestAnimationFrame(renderSprites);
 });
 
 // Click on map in placement mode
