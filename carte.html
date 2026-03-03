@@ -313,15 +313,7 @@
   <script src="mapscript.js" defer></script>
 
   <script>
-    // Update stat badge
-    const placed = POKEMON_DATA ? POKEMON_DATA.filter(p => p.x !== null).length : 0;
-    // This runs after mapscript so it's fine via the deferred script updating it
-    window.addEventListener('load', () => {
-      const p = POKEMON_DATA.filter(p => p.x !== null).length;
-      document.getElementById('statBadge').innerHTML = `<strong>${p}</strong> / ${POKEMON_DATA.length} placés`;
-    });
-
-    // Middle-click drag-to-scroll
+    // Drag-to-scroll
     const wrap = document.getElementById('mapWrap');
     let dragging = false, startX, startY, scrollLeft, scrollTop;
     wrap.addEventListener('mousedown', e => {
