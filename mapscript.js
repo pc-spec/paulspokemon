@@ -85,7 +85,27 @@ if (mapImg.complete) renderSprites();
 // que ce soit via le volet, le redimensionnement de fenêtre, ou autre.
 new ResizeObserver(renderSprites).observe(mapImg);
 
-// ─── PLACEMENT MODE ───
+// localStorage persistence
+const STORAGE_KEY = 'paulspokemon_coords';
+
+function saveCoords() {
+  const data = {};
+  POKEMON_DATA.forEach(p => { if (p.x !== null) data[p.name] = [p.x, p.y]; });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function loadCoords() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    POKEMON_DATA.forEach(p => {
+      if (saved[p.name] !== undefined) { p.x = saved[p.name][0]; p.y = saved[p.name][1]; }
+    });
+  } catch(e) {}
+}
+
+loadCoords();
+
+// Placement mode
 const placeBtn   = document.getElementById('placeBtn');
 const placePanel = document.getElementById('placePanel');
 const placeList  = document.getElementById('placeList');
@@ -93,36 +113,50 @@ const coordOut   = document.getElementById('coordOut');
 let   placeMode  = false;
 let   placeTarget = null;
 
-// Populate unplaced list
+function updateStatBadge() {
+  const badge = document.getElementById('statBadge');
+  if (badge) {
+    const n = POKEMON_DATA.filter(p => p.x !== null).length;
+    badge.innerHTML = '<strong>' + n + '</strong> / ' + POKEMON_DATA.length + ' placés';
+  }
+}
+
 function refreshPlaceList() {
   placeList.innerHTML = '';
   const unplaced = POKEMON_DATA.filter(p => p.x === null);
   const placed   = POKEMON_DATA.filter(p => p.x !== null);
-  
-  if (unplaced.length === 0) {
-    placeList.innerHTML = '<p class="place-done">✅ Tous les Pokémon sont placés !</p>';
-    return;
-  }
-  
   const heading = document.createElement('p');
   heading.className = 'place-count';
-  heading.textContent = `${placed.length} / ${POKEMON_DATA.length} placés`;
+  heading.textContent = placed.length + ' / ' + POKEMON_DATA.length + ' placés';
   placeList.appendChild(heading);
-
-  unplaced.forEach(p => {
+  function makeBtn(p, isPlaced) {
     const btn = document.createElement('button');
-    btn.className = 'place-item';
-    btn.innerHTML = `<img src="${p.img}" alt=""><span>${p.name}</span><small>${p.game}</small>`;
+    btn.className = 'place-item' + (isPlaced ? ' is-placed' : '');
+    btn.innerHTML = '<img src="' + p.img + '" alt=""><span>' + p.name + '</span><small>' + p.game + '</small>' + (isPlaced ? '<em>replacer</em>' : '');
     btn.style.setProperty('--item-color', p.color);
     btn.addEventListener('click', () => {
       placeTarget = p;
       document.querySelectorAll('.place-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      coordOut.textContent = `👆 Clique sur la carte pour placer : ${p.name}`;
+      coordOut.textContent = (isPlaced ? 'Replacer' : 'Placer') + ' : ' + p.name + ' - clique sur la carte';
       mapImg.style.cursor = 'crosshair';
     });
-    placeList.appendChild(btn);
-  });
+    return btn;
+  }
+  if (unplaced.length === 0) {
+    const done = document.createElement('p');
+    done.className = 'place-done';
+    done.textContent = 'Tous les Pokémon sont placés !';
+    placeList.appendChild(done);
+  }
+  unplaced.forEach(p => placeList.appendChild(makeBtn(p, false)));
+  if (placed.length > 0) {
+    const sep = document.createElement('p');
+    sep.className = 'place-sep';
+    sep.textContent = '-- Déjà placés --';
+    placeList.appendChild(sep);
+    placed.forEach(p => placeList.appendChild(makeBtn(p, true)));
+  }
 }
 
 placeBtn.addEventListener('click', () => {
@@ -133,23 +167,18 @@ placeBtn.addEventListener('click', () => {
   else { placeTarget = null; mapImg.style.cursor = ''; }
 });
 
-// Click on map in placement mode
 mapWrap.addEventListener('click', e => {
   if (!placeMode || !placeTarget) return;
   updateScale();
   const rect = mapImg.getBoundingClientRect();
   const rx = Math.round((e.clientX - rect.left) / scaleX);
   const ry = Math.round((e.clientY - rect.top)  / scaleY);
-  
   placeTarget.x = rx;
   placeTarget.y = ry;
-  
-  const snippet = `{ name:'${placeTarget.name}', x:${rx}, y:${ry} }`;
-  coordOut.textContent = `✅ ${placeTarget.name} → x:${rx}, y:${ry}`;
-  
-  // Copy to clipboard
-  navigator.clipboard?.writeText(snippet);
-  
+  coordOut.textContent = placeTarget.name + ' -> x:' + rx + ', y:' + ry;
+  if (navigator.clipboard) navigator.clipboard.writeText("{ name:'" + placeTarget.name + "', x:" + rx + ", y:" + ry + " }");
+  saveCoords();
+  updateStatBadge();
   placeTarget = null;
   mapImg.style.cursor = '';
   document.querySelectorAll('.place-item').forEach(b => b.classList.remove('active'));
@@ -157,11 +186,4 @@ mapWrap.addEventListener('click', e => {
   refreshPlaceList();
 });
 
-// ─── Update stat badge ───
-window.addEventListener('DOMContentLoaded', () => {
-  const badge = document.getElementById('statBadge');
-  if (badge) {
-    const n = POKEMON_DATA.filter(p => p.x !== null).length;
-    badge.innerHTML = `<strong>${n}</strong> / ${POKEMON_DATA.length} placés`;
-  }
-});
+window.addEventListener('DOMContentLoaded', updateStatBadge);

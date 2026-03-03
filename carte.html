@@ -150,6 +150,10 @@
     .place-item:hover { background: var(--surface2); border-color: var(--border-glow); }
     .place-item.active { border-color: var(--item-color, var(--gold)); background: color-mix(in srgb, var(--item-color, var(--gold)) 10%, var(--surface2)); }
     .place-done { text-align:center; padding:2rem 1rem; color:var(--text-muted); font-style:italic; }
+    .place-sep { text-align:center; color:var(--text-muted); font-size:0.65rem; padding:0.5rem 0; margin-top:0.5rem; border-top:1px solid var(--border); }
+    .place-item.is-placed { opacity:0.6; }
+    .place-item.is-placed em { font-size:0.6rem; color:var(--gold); font-style:normal; margin-left:auto; }
+    .place-item.is-placed:hover { opacity:1; }
 
     /* Map scroll container */
     #mapWrap {
@@ -304,7 +308,7 @@
 
     <div id="mapWrap">
       <div id="mapInner">
-        <img src="images/ui_g_Map.png" alt="Carte du continent" id="map">
+        <img src="images/map_v6.png" alt="Carte du continent" id="map">
         <div id="overlay"></div>
       </div>
     </div>
