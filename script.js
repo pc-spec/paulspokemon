@@ -5,7 +5,7 @@ const GAME_COLORS = {
   'Diamant':         '#9a8fd4',
   'Platine':         '#a8b0c8',
   'Heartgold':       '#d4aa40',
-  'Or ':             '#d4aa40',
+  'Or':              '#d4aa40',
   'Blanc 2':         '#7878a0',
   'Blanc':           '#9898b8',
   'X':               '#3a58c4',
